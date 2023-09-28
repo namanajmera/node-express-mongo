@@ -68,6 +68,26 @@ app.get('/api/v1/tour/:id', (req, res) => {
   }
 });
 
+// Delete the Tour
+app.delete('/api/v1/tour/:id', (req, res) => {
+  const id = req.params.id * 1;
+  const tour = tours.find((ele) => ele.id === id);
+  const updatedTours = tours.filter((ele) => ele.id !== id);
+  if (tour) {
+    fs.writeFile(
+      './dev-data/data/tours-simple.json',
+      JSON.stringify(updatedTours),
+      (err) => {
+        res.status(204).json({ status: 'success' });
+      }
+    );
+  } else {
+    res
+      .status(404)
+      .json({ status: 'error', message: `There is no data of id: ${id}` });
+  }
+});
+
 // Listening to the server
 app.listen(port, () => {
   console.log(`Server is running on ${port}`);
