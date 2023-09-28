@@ -1,11 +1,14 @@
-// Import the express
+// Imports
 const express = require('express');
 const fs = require('fs');
+const morgan = require('morgan');
 
 // Setting up to the app variable to call others.
 const app = express();
 
 //MiddleWares
+app.use(morgan('dev'));
+
 // For use the body in request.
 app.use(express.json());
 
@@ -46,14 +49,12 @@ const fileData = fs.readFileSync('./dev-data/data/tours-simple.json', 'utf-8');
 const tours = JSON.parse(fileData);
 
 const getAllTour = (req, res) => {
-  res
-    .status(200)
-    .json({
-      status: 'success',
-      requestedAt: req.requestTIme,
-      results: tours.length,
-      data: { tours },
-    });
+  res.status(200).json({
+    status: 'success',
+    requestedAt: req.requestTIme,
+    results: tours.length,
+    data: { tours },
+  });
 };
 
 const postTour = (req, res) => {
