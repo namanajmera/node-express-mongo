@@ -5,12 +5,13 @@ const {
   getTourById,
   deleteTourById,
   checkId,
+  checkBody,
 } = require('../controllers/tourController');
 const router = express.Router();
 
 router.param('id', checkId);
 
-router.route('/tours').get(getAllTour).post(postTour);
+router.route('/tours').get(getAllTour).post(checkBody, postTour);
 
 router.route('/tour/:id').get(getTourById).delete(deleteTourById);
 

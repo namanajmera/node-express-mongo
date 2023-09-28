@@ -4,6 +4,18 @@ const tours = JSON.parse(
   fs.readFileSync('./dev-data/data/tours-simple.json', 'utf-8')
 );
 
+exports.checkBody = (req, res, next) => {
+  if (!req.body.name || !req.body.price) {
+    return res
+      .status(400)
+      .json({
+        status: 'error',
+        message: 'Mandatory fields are: name and price, you have to fill this.',
+      });
+  }
+  next();
+};
+
 exports.checkId = (req, res, next, val) => {
   const tour = tours.find((ele) => ele.id === Number(val));
   if (!tour) {
