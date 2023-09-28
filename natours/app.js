@@ -47,6 +47,9 @@ app.post('/', (req, res) => {
 
 const fileData = fs.readFileSync('./dev-data/data/tours-simple.json', 'utf-8');
 const tours = JSON.parse(fileData);
+const users = JSON.parse(
+  fs.readFileSync('./dev-data/data/users.json', 'utf-8')
+);
 
 const getAllTour = (req, res) => {
   res.status(200).json({
@@ -101,6 +104,35 @@ const deleteTourById = (req, res) => {
   }
 };
 
+// Users Routers Details
+const getAllUsers = (req, res) => {
+  res
+    .status(200)
+    .json({ status: 'success', results: users.length, data: users });
+};
+
+const createNewUser = (req, res) => {
+  const reqBody = req.body;
+  res
+    .status(200)
+    .json({ status: 'success', results: users.length, data: users });
+};
+
+const getUserById = (req, res) => {
+  res
+    .status(200)
+    .json({ status: 'success', results: users.length, data: users });
+};
+const deleteUserById = (req, res) => {
+  res
+    .status(200)
+    .json({ status: 'success', results: users.length, data: users });
+};
+const updateUserById = (req, res) => {
+  res
+    .status(200)
+    .json({ status: 'success', results: users.length, data: users });
+};
 /* // Get the Tours List
 app.get('/api/v1/tours', getAllTour);
 
@@ -117,6 +149,15 @@ app.delete('/api/v1/tour/:id', deleteTourById); */
 app.route('/api/v1/tours').get(getAllTour).post(postTour);
 
 app.route('/api/v1/tour/:id').get(getTourById).delete(deleteTourById);
+
+// For Users Routes
+app.route('/api/v1/users').get(getAllUsers).post(createNewUser);
+
+app
+  .route('/api/v1/user/:id')
+  .get(getUserById)
+  .delete(deleteUserById)
+  .patch(updateUserById);
 
 // Listening to the server
 app.listen(port, () => {
