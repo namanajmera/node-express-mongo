@@ -34,15 +34,13 @@ app.post('/', (req, res) => {
 const fileData = fs.readFileSync('./dev-data/data/tours-simple.json', 'utf-8');
 const tours = JSON.parse(fileData);
 
-// Get the Tours List
-app.get('/api/v1/tours', (req, res) => {
+const getAllTour = (req, res) => {
   res
     .status(200)
     .json({ status: 'success', results: tours.length, data: { tours } });
-});
+};
 
-// Post a New Tour
-app.post('/api/v1/tours', (req, res) => {
+const postTour = (req, res) => {
   const newId = tours[tours.length - 1].id + 1;
   const newObject = Object.assign({ id: newId }, req.body);
   tours.push(newObject);
@@ -53,10 +51,9 @@ app.post('/api/v1/tours', (req, res) => {
       res.status(201).json({ status: 'success', data: newObject });
     }
   );
-});
+};
 
-// Get tour by id
-app.get('/api/v1/tour/:id', (req, res) => {
+const getTourById = (req, res) => {
   const { id } = req.params;
   const tour = tours.find((ele) => ele.id === Number(id));
   if (tour) {
@@ -66,10 +63,9 @@ app.get('/api/v1/tour/:id', (req, res) => {
       .status(404)
       .json({ status: 'error', message: `There is no data of id: ${id}` });
   }
-});
+};
 
-// Delete the Tour
-app.delete('/api/v1/tour/:id', (req, res) => {
+const deleteTourById = (req, res) => {
   const id = req.params.id * 1;
   const tour = tours.find((ele) => ele.id === id);
   const updatedTours = tours.filter((ele) => ele.id !== id);
@@ -86,7 +82,24 @@ app.delete('/api/v1/tour/:id', (req, res) => {
       .status(404)
       .json({ status: 'error', message: `There is no data of id: ${id}` });
   }
-});
+};
+
+/* // Get the Tours List
+app.get('/api/v1/tours', getAllTour);
+
+// Post a New Tour
+app.post('/api/v1/tours', postTour);
+
+// Get tour by id
+app.get('/api/v1/tour/:id', getTourById);
+
+// Delete the Tour
+app.delete('/api/v1/tour/:id', deleteTourById); */
+
+// New Method to Wrap the routes.
+app.route('/api/v1/tours').get(getAllTour).post(postTour);
+
+app.route('/api/v1/tour/:id').get(getTourById).delete(deleteTourById);
 
 // Listening to the server
 app.listen(port, () => {
