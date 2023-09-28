@@ -13,6 +13,8 @@ app.use(morgan('dev'));
 // For use the body in request.
 app.use(express.json());
 
+app.use(express.static('./public'));
+
 // Custom Middleware
 app.use((req, res, next) => {
   console.log('Hello, I am from middleware');
