@@ -4,6 +4,16 @@ const tours = JSON.parse(
   fs.readFileSync('./dev-data/data/tours-simple.json', 'utf-8')
 );
 
+exports.checkId = (req, res, next, val) => {
+  const tour = tours.find((ele) => ele.id === Number(val));
+  if (!tour) {
+    return res
+      .status(404)
+      .json({ status: 'error', message: `There is no data of id: ${val}` });
+  }
+  next();
+};
+
 exports.getAllTour = (req, res) => {
   res.status(200).json({
     status: 'success',
@@ -29,13 +39,7 @@ exports.postTour = (req, res) => {
 exports.getTourById = (req, res) => {
   const { id } = req.params;
   const tour = tours.find((ele) => ele.id === Number(id));
-  if (tour) {
-    res.status(200).json({ status: 'success', data: tour });
-  } else {
-    res
-      .status(404)
-      .json({ status: 'error', message: `There is no data of id: ${id}` });
-  }
+  res.status(200).json({ status: 'success', data: tour });
 };
 
 exports.deleteTourById = (req, res) => {
@@ -50,9 +54,5 @@ exports.deleteTourById = (req, res) => {
         res.status(204).json({ status: 'success' });
       }
     );
-  } else {
-    res
-      .status(404)
-      .json({ status: 'error', message: `There is no data of id: ${id}` });
   }
 };
