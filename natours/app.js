@@ -9,6 +9,17 @@ const app = express();
 // For use the body in request.
 app.use(express.json());
 
+// Custom Middleware
+app.use((req, res, next) => {
+  console.log('Hello, I am from middleware');
+  next();
+});
+
+app.use((req, res, next) => {
+  req.requestTIme = new Date().toISOString();
+  next();
+});
+
 // Setting up the port.
 const port = 8080;
 
@@ -37,7 +48,12 @@ const tours = JSON.parse(fileData);
 const getAllTour = (req, res) => {
   res
     .status(200)
-    .json({ status: 'success', results: tours.length, data: { tours } });
+    .json({
+      status: 'success',
+      requestedAt: req.requestTIme,
+      results: tours.length,
+      data: { tours },
+    });
 };
 
 const postTour = (req, res) => {
