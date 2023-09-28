@@ -25,24 +25,6 @@ app.use((req, res, next) => {
 
 // Setting up the port.
 const port = 8080;
-
-/* // Basic Get Request
-app.get('/', (req, res) => {
-  res.status(200).json({
-    message: 'Hello, I am from server.',
-    status: 'Success',
-    responseCode: 200,
-  });
-});
-
-// Same for Post Request
-app.post('/', (req, res) => {
-  res.status(201).json({
-    message: 'Now, You can send the post request as well.',
-    status: 'Success',
-    responseCode: 201,
-  });
-}); */
 // Fetch The Data from file
 
 const fileData = fs.readFileSync('./dev-data/data/tours-simple.json', 'utf-8');
@@ -133,17 +115,6 @@ const updateUserById = (req, res) => {
     .status(200)
     .json({ status: 'success', results: users.length, data: users });
 };
-/* // Get the Tours List
-app.get('/api/v1/tours', getAllTour);
-
-// Post a New Tour
-app.post('/api/v1/tours', postTour);
-
-// Get tour by id
-app.get('/api/v1/tour/:id', getTourById);
-
-// Delete the Tour
-app.delete('/api/v1/tour/:id', deleteTourById); */
 
 // New Method to Wrap the routes.
 app.route('/api/v1/tours').get(getAllTour).post(postTour);
