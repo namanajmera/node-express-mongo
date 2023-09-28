@@ -117,18 +117,25 @@ const updateUserById = (req, res) => {
 };
 
 // New Method to Wrap the routes.
-app.route('/api/v1/tours').get(getAllTour).post(postTour);
 
-app.route('/api/v1/tour/:id').get(getTourById).delete(deleteTourById);
+const tourRouter = express.Router();
+const usersRouter = express.Router();
+
+tourRouter.route('/tours').get(getAllTour).post(postTour);
+
+tourRouter.route('/tour/:id').get(getTourById).delete(deleteTourById);
 
 // For Users Routes
-app.route('/api/v1/users').get(getAllUsers).post(createNewUser);
+usersRouter.route('/users').get(getAllUsers).post(createNewUser);
 
-app
-  .route('/api/v1/user/:id')
+usersRouter
+  .route('/user/:id')
   .get(getUserById)
   .delete(deleteUserById)
   .patch(updateUserById);
+
+app.use('/api/v1', tourRouter);
+app.use('/api/v1', usersRouter);
 
 // Listening to the server
 app.listen(port, () => {
