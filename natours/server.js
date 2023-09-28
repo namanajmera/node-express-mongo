@@ -1,7 +1,10 @@
+const dotenv = require('dotenv');
+dotenv.config({ path: './config.env' });
+
 const app = require('./app');
 
 // Setting up the port.
-const port = 8080;
+const port = process.env.PORT;
 // Listening to the server
 
 app.listen(port, () => {

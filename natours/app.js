@@ -8,7 +8,9 @@ const usersRouter = require('./routes/userRoute');
 const app = express();
 
 //MiddleWares
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 // For use the body in request.
 app.use(express.json());
