@@ -6,12 +6,10 @@ const tours = JSON.parse(
 
 exports.checkBody = (req, res, next) => {
   if (!req.body.name || !req.body.price) {
-    return res
-      .status(400)
-      .json({
-        status: 'error',
-        message: 'Mandatory fields are: name and price, you have to fill this.',
-      });
+    return res.status(400).json({
+      status: 'error',
+      message: 'Mandatory fields are: name and price, you have to fill this.',
+    });
   }
   next();
 };
