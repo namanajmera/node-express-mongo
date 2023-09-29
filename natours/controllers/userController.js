@@ -37,9 +37,13 @@ exports.getUserById = (req, res) => {
 };
 
 exports.deleteUserById = (req, res) => {
-  res
-    .status(200)
-    .json({ status: 'success', results: users.length, data: users });
+  const { id } = req.params;
+  const newUsers = users.filter((ele) => ele.id !== id);
+  fs.writeFile('./dev-data/data/users.json', JSON.stringify(newUsers), () => {
+    res
+      .status(204)
+      .json({ status: 'success', message: 'User has been deleted.' });
+  });
 };
 
 exports.updateUserById = (req, res) => {
