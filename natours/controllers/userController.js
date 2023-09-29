@@ -47,7 +47,15 @@ exports.deleteUserById = (req, res) => {
 };
 
 exports.updateUserById = (req, res) => {
-  res
-    .status(200)
-    .json({ status: 'success', results: users.length, data: users });
+  const { id } = req.params;
+  const newObject = req.body;
+  const userIndex = users.findIndex((ele) => ele.id === id);
+  users[userIndex] = { ...users[userIndex], ...newObject };
+  fs.writeFile('./dev-data/data/users.json', JSON.stringify(users), () => {
+    res.status(200).json({
+      status: 'success',
+      message: 'User has been update.',
+      data: newObject,
+    });
+  });
 };

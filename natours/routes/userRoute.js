@@ -19,6 +19,6 @@ router
   .route('/user/:id')
   .get(getUserById)
   .delete(deleteUserById)
-  .patch(updateUserById);
+  .put(updateUserById);
 
 module.exports = router;
