@@ -4,6 +4,16 @@ const users = JSON.parse(
   fs.readFileSync('./dev-data/data/users.json', 'utf-8')
 );
 
+exports.checkId = (req, res, next, val) => {
+  const user = users.find((ele) => ele.id === val);
+  if (!user) {
+    return res
+      .status(404)
+      .json({ status: 'error', message: `There is no data of id: ${val}` });
+  }
+  next();
+};
+
 // Users Routers Details
 exports.getAllUsers = (req, res) => {
   res
@@ -21,15 +31,17 @@ exports.createNewUser = (req, res) => {
 };
 
 exports.getUserById = (req, res) => {
-  res
-    .status(200)
-    .json({ status: 'success', results: users.length, data: users });
+  const { id } = req.params;
+  const user = users.find((ele) => ele.id === id);
+  res.status(200).json({ status: 'success', data: user });
 };
+
 exports.deleteUserById = (req, res) => {
   res
     .status(200)
     .json({ status: 'success', results: users.length, data: users });
 };
+
 exports.updateUserById = (req, res) => {
   res
     .status(200)
