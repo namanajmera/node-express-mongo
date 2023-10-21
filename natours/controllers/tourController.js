@@ -1,17 +1,14 @@
 const fs = require('fs');
 
-const tours = JSON.parse(
-  fs.readFileSync('./dev-data/data/tours-simple.json', 'utf-8')
-);
+const filePageURL = './dev-data/data/tours-simple.json';
+const tours = JSON.parse(fs.readFileSync(filePageURL, 'utf-8'));
 
 exports.checkBody = (req, res, next) => {
   if (!req.body.name || !req.body.price) {
-    return res
-      .status(400)
-      .json({
-        status: 'error',
-        message: 'Mandatory fields are: name and price, you have to fill this.',
-      });
+    return res.status(400).json({
+      status: 'error',
+      message: 'Mandatory fields are: name and price, you have to fill this.',
+    });
   }
   next();
 };
@@ -39,13 +36,9 @@ exports.postTour = (req, res) => {
   const newId = tours[tours.length - 1].id + 1;
   const newObject = Object.assign({ id: newId }, req.body);
   tours.push(newObject);
-  fs.writeFile(
-    './dev-data/data/tours-simple.json',
-    JSON.stringify(tours),
-    (err) => {
-      res.status(201).json({ status: 'success', data: newObject });
-    }
-  );
+  fs.writeFile(filePageURL, JSON.stringify(tours), (err) => {
+    res.status(201).json({ status: 'success', data: newObject });
+  });
 };
 
 exports.getTourById = (req, res) => {
@@ -59,12 +52,18 @@ exports.deleteTourById = (req, res) => {
   const tour = tours.find((ele) => ele.id === id);
   const updatedTours = tours.filter((ele) => ele.id !== id);
   if (tour) {
-    fs.writeFile(
-      './dev-data/data/tours-simple.json',
-      JSON.stringify(updatedTours),
-      (err) => {
-        res.status(204).json({ status: 'success' });
-      }
-    );
+    fs.writeFile(filePageURL, JSON.stringify(updatedTours), (err) => {
+      res.status(204).json({ status: 'success' });
+    });
   }
+};
+
+exports.updateTourById = (req, res) => {
+  const id = req.params.id * 1;
+  const tourIndex = tours.findIndex((ele) => ele.id === id);
+  const updatedObject = req.body;
+  tours[tourIndex] = { ...tours[tourIndex], ...updatedObject };
+  fs.writeFile(filePageURL, JSON.stringify(tours), () => {
+    res.status(200).json({ status: 'success', data: tours[tourIndex] });
+  });
 };
