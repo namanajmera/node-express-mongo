@@ -10,7 +10,7 @@ const {
 } = require('../controllers/tourController');
 const router = express.Router();
 
-router.param('id', checkId);
+// router.param('id', checkId);
 
 router.route('/tours').get(getAllTour).post(checkBody, postTour);
 
