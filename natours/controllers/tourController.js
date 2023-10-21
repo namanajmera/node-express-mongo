@@ -19,9 +19,10 @@ exports.postTour = async (req, res) => {
   }
 };
 
-exports.getTourById = (req, res) => {
+exports.getTourById = async (req, res) => {
   const { id } = req.params;
-  res.status(200).json({ status: "success" /*  data: tour */ });
+  const tour = await Tour.findById(id);
+  res.status(200).json({ status: "success", data: tour });
 };
 
 exports.deleteTourById = (req, res) => {
