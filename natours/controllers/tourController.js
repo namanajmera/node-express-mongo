@@ -20,7 +20,17 @@ exports.getAllTour = async (req, res) => {
       const fields = req.query.fields.split(",").join(" ");
       query = query.select(fields);
     } else {
-      query = query.select('-__v');
+      query = query.select("-__v");
+    }
+
+    // 4. Page and Limits.
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || 10000;
+    const skip = page * limit - limit;
+    query = query.skip(skip).limit(limit);
+    if (req.query.page) {
+      const countTour = await Tour.countDocuments();
+      if (skip >= countTour) throw new Error('This page does not exist.');
     }
 
     //  Executing the query.
