@@ -10,7 +10,11 @@ exports.getAllTour = async (req, res) => {
     excludeFields.forEach((el) => delete queryObject[el]);
 
 
-    const query = Tour.find(queryObject);
+    let query = Tour.find(queryObject);
+
+    if (req.query.sort) {
+      query = query.sort(req.query.sort);
+    }
     
     //  Executing the query.
     const tours = await query;
