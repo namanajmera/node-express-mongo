@@ -80,6 +80,13 @@ tourSchema.post('save', function(doc,next) {
   next();
 }) */
 
+
+// QUERY Middleware:
+tourSchema.pre('find', function(next) {
+  this.where({ ratingsAverage: {$ne : 4.7}});
+  next();
+})
+
 const Tour = mongoose.model("Tour", tourSchema);
 
 module.exports = Tour;
