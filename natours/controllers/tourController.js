@@ -38,7 +38,7 @@ exports.postTour = async (req, res) => {
     const newTour = await Tour.create(req.body);
     res.status(201).json({ status: "success", data: newTour });
   } catch (error) {
-    res.status(400).json({ status: "fail", message: "Invalid Input" });
+    res.status(400).json({ status: "fail", error, message: "Invalid Input" });
   }
 };
 
