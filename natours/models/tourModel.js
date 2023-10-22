@@ -87,6 +87,14 @@ tourSchema.pre('find', function(next) {
   next();
 })
 
+// AGGREGATION Middleware
+tourSchema.pre('aggregate', function(next) {
+  this.pipeline().unshift({
+    $match: { _id: {$ne: 'easy'}}
+  })
+  next();
+})
+
 const Tour = mongoose.model("Tour", tourSchema);
 
 module.exports = Tour;
