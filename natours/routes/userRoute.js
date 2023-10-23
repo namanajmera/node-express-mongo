@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const {
   getAllUsers,
   createNewUser,
@@ -6,17 +6,20 @@ const {
   deleteUserById,
   updateUserById,
   checkId,
-} = require('../controllers/userController');
+} = require("../controllers/userController");
+const { signup } = require("../controllers/authController");
 
 const router = express.Router();
 
-router.param('id', checkId);
+router.param("id", checkId);
+
+router.post("/users/signup", signup);
 
 // For Users Routes
-router.route('/users').get(getAllUsers).post(createNewUser);
+router.route("/users").get(getAllUsers).post(createNewUser);
 
 router
-  .route('/user/:id')
+  .route("/user/:id")
   .get(getUserById)
   .delete(deleteUserById)
   .put(updateUserById);
