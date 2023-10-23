@@ -1,3 +1,4 @@
+const { promisify } = require("util");
 const createAsync = require("./../utils/createAsync");
 const User = require("./../models/userModal");
 const jwt = require("jsonwebtoken");
@@ -44,4 +45,43 @@ exports.login = createAsync(async (req, res, next) => {
     status: "success",
     token,
   });
+});
+
+exports.protect = createAsync(async (req, res, next) => {
+  // 1. Getting the token and check its there or not.
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+
+  if (!token) {
+    next(new AppError("You are not login. Please login to get access.", 401));
+  }
+  // 2. Verification Token
+  const decode = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+  //  3. Check if user still exist.
+  const currentUser = await User.findById(decode.id);
+  if (!currentUser) {
+    return next(
+      new AppError("Token Invalid. Please login with the existing user.", 401)
+    );
+  }
+
+  // 4. Check the password is modified or not.
+  if (currentUser.changedPasswordAfter(decode.iat)) {
+    return next(
+      new AppError(
+        "User recently changed the password! Please login again.",
+        401
+      )
+    );
+  }
+
+  // GRANT ACCESS TO PROTECTED ROUTE
+  req.user = currentUser;
+  next();
 });
