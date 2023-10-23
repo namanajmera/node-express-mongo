@@ -7,13 +7,14 @@ const {
   updateUserById,
   checkId,
 } = require("../controllers/userController");
-const { signup } = require("../controllers/authController");
+const { signup, login } = require("../controllers/authController");
 
 const router = express.Router();
 
 router.param("id", checkId);
 
 router.post("/users/signup", signup);
+router.post("/users/login", login);
 
 // For Users Routes
 router.route("/users").get(getAllUsers).post(createNewUser);
