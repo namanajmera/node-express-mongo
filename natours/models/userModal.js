@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
   {
@@ -26,6 +27,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please provide the password"],
       minlength: 8,
+      validate: {
+        validator: function (el) {
+          return this.password === el;
+        },
+        message: "Password Should be the same.",
+      },
     },
   },
   {
@@ -33,6 +40,18 @@ const userSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+userSchema.pre("save", async function (next) {
+  // Only run this function when password is actually modified
+  if (!this.isModified("password")) return next();
+
+  // Hash the password ith cost of 12
+  this.password = await bcrypt.hash(this.password, 12);
+  // Delete the Password Confirm
+  this.passwordConfirm = undefined;
+  next();
+});
+
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;
