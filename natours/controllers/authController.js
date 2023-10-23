@@ -85,3 +85,14 @@ exports.protect = createAsync(async (req, res, next) => {
   req.user = currentUser;
   next();
 });
+
+exports.restrict = (...roles) => {
+  return createAsync(async (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError("You don't have access to delete the tour", 403)
+      );
+    }
+    next();
+  });
+};
