@@ -5,7 +5,7 @@ const {
   getUserById,
   deleteUserById,
   updateUserById,
-  checkId,
+  updateMe,
 } = require("../controllers/userController");
 const {
   signup,
@@ -18,7 +18,7 @@ const {
 
 const router = express.Router();
 
-router.param("id", checkId);
+// router.param("id", checkId);
 
 router.post("/users/signup", signup);
 router.post("/users/login", login);
@@ -28,8 +28,10 @@ router.patch("/users/resetPassword/:token", resetPassword);
 
 router.patch("/users/updatePassword", protect, updatePassword);
 
+router.patch("/users/updateMe", protect, updateMe);
+
 // For Users Routes
-router.route("/users").get(getAllUsers).post(createNewUser);
+router.route("/users").get(protect, getAllUsers).post(createNewUser);
 
 router
   .route("/user/:id")
