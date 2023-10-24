@@ -12,18 +12,33 @@ const signToken = (id) => {
   });
 };
 
-exports.signup = createAsync(async (req, res, next) => {
-  const newUser = await User.create(req.body);
+const createSendToken = (user, statusCode, res) => {
+  const token = signToken(user._id);
+  //res.cookie is used to set a cookie in the browser
+  const cookieOptions = {
+    httpOnly: true,
+    expires: new Date(Date.now() + parseInt(process.env.JWT_COOKIE_EXPIRE)),
+  };
 
-  const token = signToken(newUser._id);
+  if (process.env.NODE_ENV === "production") {
+    cookieOptions.secure = true;
+  }
+  res.cookie("jwt", token, cookieOptions);
+  user.password = undefined;
 
-  res.status(201).json({
+  res.status(statusCode).json({
     status: "success",
     token,
     data: {
-      user: newUser,
+      user,
     },
   });
+};
+
+exports.signup = createAsync(async (req, res, next) => {
+  const newUser = await User.create(req.body);
+
+  createSendToken(newUser, 201, res);
 });
 
 exports.login = createAsync(async (req, res, next) => {
@@ -42,11 +57,8 @@ exports.login = createAsync(async (req, res, next) => {
   }
 
   //    3) If everything is ok, send the token
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: "success",
-    token,
-  });
+
+  createSendToken(user, 200, res);
 });
 
 exports.protect = createAsync(async (req, res, next) => {
