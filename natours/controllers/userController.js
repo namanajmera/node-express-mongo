@@ -40,6 +40,14 @@ exports.updateMe = createAsync(async (req, res, next) => {
   });
 });
 
+exports.deleteMe = createAsync(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user.id, { active: false });
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});
+
 exports.createNewUser = (req, res) => {
   // const newId = "5c8a1d5b0190b214360dc001";
   // const newUser = Object.assign({ id: newId }, req.body);

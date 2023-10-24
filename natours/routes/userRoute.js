@@ -6,6 +6,7 @@ const {
   deleteUserById,
   updateUserById,
   updateMe,
+  deleteMe,
 } = require("../controllers/userController");
 const {
   signup,
@@ -29,6 +30,7 @@ router.patch("/users/resetPassword/:token", resetPassword);
 router.patch("/users/updatePassword", protect, updatePassword);
 
 router.patch("/users/updateMe", protect, updateMe);
+router.delete("/users/deleteMe", protect, deleteMe);
 
 // For Users Routes
 router.route("/users").get(protect, getAllUsers).post(createNewUser);
