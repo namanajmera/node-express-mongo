@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const { promisify } = require("util");
 const createAsync = require("./../utils/createAsync");
 const User = require("./../models/userModal");
@@ -142,5 +143,35 @@ exports.forgotPassword = createAsync(async (req, res, next) => {
 });
 
 exports.resetPassword = createAsync(async (req, res, next) => {
+  // 1. Get user based on the token
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hash");
+
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: Date.now() },
+  });
+
+  // 2. If token has not expired, and there is user, set the new password
+  if (!user) {
+    return next(new AppError("Your token has expired or invalid.", 400));
+  }
+
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+  await user.save();
+
+  // 3. Update changePasswordAt property for the user
+
+  // 4. Log the user in, send the JWT
+  const token = signToken(user._id);
+  res.status(200).json({
+    status: "success",
+    token,
+  });
   next();
 });
