@@ -99,6 +99,13 @@ tourSchema.virtual("durationWeeks").get(function () {
   return this.duration / 7;
 });
 
+// Child to Parent referencing
+tourSchema.virtual("reviews", {
+  ref: "Review",
+  localField: "_id",
+  foreignField: "tour",
+});
+
 // Mongoose MiddleWare
 // Document Middleware: runs before .save() and .create()
 tourSchema.pre("save", function (next) {
