@@ -14,11 +14,17 @@ exports.getAllReviews = createAsync(async (req, res, next) => {
 });
 
 exports.addReview = createAsync(async (req, res, next) => {
+  if (!req.body.tour) req.body.tour = req.params.tourId;
+  if (!req.body.user) req.body.user = req.user._id;
+
   const review = await Review.create(req.body);
   if (!review) throw new AppError("No review created", 401);
   res.status(201).json({
     status: "success",
     message: "Review added successfully!",
+    data: {
+      review,
+    },
   });
 });
 
