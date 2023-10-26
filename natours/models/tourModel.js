@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const slugify = require('slugify');
+const slugify = require("slugify");
 
 const tourSchema = new mongoose.Schema(
   {
@@ -58,6 +58,29 @@ const tourSchema = new mongoose.Schema(
       default: Date.now(),
     },
     startDates: [Date],
+    startLocation: {
+      type: {
+        type: String,
+        default: "Point",
+        enum: ["Point"],
+      },
+      coordinates: [Number],
+      address: String,
+      description: String,
+    },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: "Point",
+          enum: ["Point"],
+        },
+        coordinates: [Number],
+        address: String,
+        description: String,
+        day: Number,
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },
@@ -71,10 +94,10 @@ tourSchema.virtual("durationWeeks").get(function () {
 
 // Mongoose MiddleWare
 // Document Middleware: runs before .save() and .create()
-tourSchema.pre('save', function(next) {
-  this.slug = slugify(this.name, {lower: true}); 
+tourSchema.pre("save", function (next) {
+  this.slug = slugify(this.name, { lower: true });
   next();
-})
+});
 
 /* // Runs after
 tourSchema.post('save', function(doc,next) {
@@ -82,20 +105,19 @@ tourSchema.post('save', function(doc,next) {
   next();
 }) */
 
-
 // QUERY Middleware:
-tourSchema.pre('find', function(next) {
-  this.where({ ratingsAverage: {$ne : 4.7}});
+tourSchema.pre("find", function (next) {
+  this.where({ ratingsAverage: { $ne: 4.7 } });
   next();
-})
+});
 
 // AGGREGATION Middleware
-tourSchema.pre('aggregate', function(next) {
+tourSchema.pre("aggregate", function (next) {
   this.pipeline().unshift({
-    $match: { _id: {$ne: 'easy'}}
-  })
+    $match: { _id: { $ne: "easy" } },
+  });
   next();
-})
+});
 
 const Tour = mongoose.model("Tour", tourSchema);
 
