@@ -5,7 +5,8 @@ const {
   addReview,
 } = require("../controllers/reviewController");
 const { protect } = require("../controllers/authController");
-const router = express.Router();
+
+const router = express.Router({ mergeParams: true });
 
 router.route("/").get(protect, getAllReviews).post(protect, addReview);
 

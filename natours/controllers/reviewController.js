@@ -3,7 +3,11 @@ const AppError = require("../utils/appError");
 const createAsync = require("../utils/createAsync");
 
 exports.getAllReviews = createAsync(async (req, res, next) => {
-  const reviews = await Review.find();
+  const filter = {};
+  if (req.params.tourId) {
+    filter.tour = req.params.tourId;
+  }
+  const reviews = await Review.find(filter);
 
   res.status(200).json({
     status: "success",
