@@ -5,8 +5,6 @@ const {
   postTour,
   getTourById,
   deleteTourById,
-  checkId,
-  checkBody,
   updateTourById,
   aliasTopTours,
   getTourStats,
@@ -19,9 +17,6 @@ const router = express.Router();
 
 router.use("/tours/:tourId/reviews", reviewRouter);
 
-// POST /tours/232edsd32/reviews
-// GET /tours/232edsd32/reviews
-// GET /tours/232edsd32/reviews/123123kjh123kh12
 router.route("/tours/:tourId/reviews").post(protect, addReview);
 
 router.route("/top-ratings").get(aliasTopTours, getAllTour);
@@ -32,7 +27,7 @@ router
   .route("/tour/:id")
   .get(getTourById)
   .delete(protect, restrict("admin", "lead-guide"), deleteTourById)
-  .put(updateTourById);
+  .patch(updateTourById);
 
 router.route("/tour-stats").get(getTourStats);
 
