@@ -24,18 +24,19 @@ const router = express.Router();
 
 router.post("/users/signup", signup);
 router.post("/users/login", login);
-
 router.post("/users/forgotPassword", forgotPassword);
 router.patch("/users/resetPassword/:token", resetPassword);
 
-router.patch("/users/updatePassword", protect, updatePassword);
+router.use(protect);
 
-router.get("/users/me", protect, getMe, getUserById);
-router.patch("/users/updateMe", protect, updateMe);
-router.delete("/users/deleteMe", protect, deleteMe);
+router.patch("/users/updatePassword", updatePassword);
+
+router.get("/users/me", getMe, getUserById);
+router.patch("/users/updateMe", updateMe);
+router.delete("/users/deleteMe", deleteMe);
 
 // For Users Routes
-router.route("/users").get(protect, getAllUsers).post(createNewUser);
+router.route("/users").get(getAllUsers).post(createNewUser);
 
 router
   .route("/user/:id")
