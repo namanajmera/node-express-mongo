@@ -19,7 +19,7 @@ router
 router
   .route("/:id")
   .get(protect, getReviewById)
-  .delete(deleteReviewById)
-  .patch(updateReviewById);
+  .delete(protect, deleteReviewById)
+  .patch(protect, updateReviewById);
 
 module.exports = router;

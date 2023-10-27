@@ -19,16 +19,16 @@ router.use("/tours/:tourId/reviews", reviewRouter);
 
 router.route("/tours/:tourId/reviews").post(protect, addReview);
 
-router.route("/top-ratings").get(aliasTopTours, getAllTour);
+router.route("/top-ratings").get(aliasTopTours, protect, getAllTour);
 
-router.route("/tours").get(protect, getAllTour).post(postTour);
+router.route("/tours").get(protect, getAllTour).post(protect, postTour);
 
 router
   .route("/tour/:id")
-  .get(getTourById)
+  .get(protect, getTourById)
   .delete(protect, restrict("admin", "lead-guide"), deleteTourById)
-  .patch(updateTourById);
+  .patch(protect, updateTourById);
 
-router.route("/tour-stats").get(getTourStats);
+router.route("/tour-stats").get(protect, getTourStats);
 
 module.exports = router;
