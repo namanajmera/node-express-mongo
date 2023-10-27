@@ -32,8 +32,8 @@ app.use((req, res, next) => {
 });
 
 // All Routers
-app.use("/api/v1", tourRouter);
 app.use("/api/v1", usersRouter);
+app.use("/api/v1", tourRouter);
 app.use("/api/v1/reviews", reviewRouter);
 
 app.all("*", (req, res, next) => {
