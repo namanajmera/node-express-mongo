@@ -2,6 +2,7 @@ const fs = require("fs");
 const User = require("../models/userModal");
 const createAsync = require("../utils/createAsync");
 const AppError = require("../utils/appError");
+const { getOne } = require("./handlerFactory");
 
 const filterObj = (obj, ...args) => {
   const newObj = {};
@@ -20,6 +21,11 @@ exports.getAllUsers = createAsync(async (req, res, next) => {
     .status(200)
     .json({ status: "success", results: users.length, data: users });
 });
+
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+};
 
 exports.updateMe = createAsync(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
@@ -57,11 +63,7 @@ exports.createNewUser = (req, res) => {
   // });
 };
 
-exports.getUserById = (req, res) => {
-  // const { id } = req.params;
-  // const user = users.find((ele) => ele.id === id);
-  // res.status(200).json({ status: "success", data: user });
-};
+exports.getUserById = getOne(User);
 
 exports.deleteUserById = (req, res) => {
   // const { id } = req.params;
