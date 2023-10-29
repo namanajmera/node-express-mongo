@@ -8,6 +8,8 @@ const {
   updateTourById,
   aliasTopTours,
   getTourStats,
+  uploadTourImages,
+  resizeTourImages,
 } = require("../controllers/tourController");
 const { protect, restrict } = require("../controllers/authController");
 const { addReview } = require("../controllers/reviewController");
@@ -29,7 +31,12 @@ router
   .route("/tour/:id")
   .get(getTourById)
   .delete(restrict("admin", "lead-guide"), deleteTourById)
-  .patch(restrict("admin", "lead-guide"), updateTourById);
+  .patch(
+    restrict("admin", "lead-guide"),
+    uploadTourImages,
+    resizeTourImages,
+    updateTourById
+  );
 
 router.route("/tour-stats").get(getTourStats);
 
