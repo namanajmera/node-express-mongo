@@ -1,8 +1,33 @@
-const fs = require("fs");
 const User = require("../models/userModal");
 const createAsync = require("../utils/createAsync");
 const AppError = require("../utils/appError");
 const { getOne } = require("./handlerFactory");
+const multer = require("multer");
+
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/img/users");
+  },
+  filename: (req, file, cb) => {
+    const ext = file.mimetype.split("/")[1];
+    cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+  },
+});
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("image")) {
+    cb(null, true);
+  } else {
+    cb(new AppError("Please upload an image", 400), false);
+  }
+};
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+exports.uploadUserPhoto = upload.single("photo");
 
 const filterObj = (obj, ...args) => {
   const newObj = {};
@@ -28,6 +53,8 @@ exports.getMe = (req, res, next) => {
 };
 
 exports.updateMe = createAsync(async (req, res, next) => {
+  console.log(req.file);
+  console.log(req.body);
   if (req.body.password || req.body.passwordConfirm) {
     return next(new AppError("This is not a route for change password.", 400));
   }
