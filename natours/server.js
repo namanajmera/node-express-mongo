@@ -7,7 +7,7 @@ const app = require("./app");
 // Get the  Mongo DB URL Connection String
 const DB = process.env.DATABASE;
 
-// NO make a connection to DB
+// Now make a connection to DB
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
@@ -24,6 +24,6 @@ app.listen(port, () => {
   console.log(`Server is running on ${port}`);
 });
 
-process.on('unhandledRejection' ,err => {
+process.on("unhandledRejection", (err) => {
   process.exit(1);
-})
+});
